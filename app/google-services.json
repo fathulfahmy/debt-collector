@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "595722485840",
+    "firebase_url": "https://debtcollector-52507-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "debtcollector-52507",
+    "storage_bucket": "debtcollector-52507.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595722485840:android:ef283a42e33ac40facd155",
+        "android_client_info": {
+          "package_name": "com.patui.debtcollector"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPvRVI6ofK8-mAW4DD9pAgWRqahBamovA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

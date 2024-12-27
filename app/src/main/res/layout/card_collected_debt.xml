@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/debt_name_collected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Debt Name"
+        android:textSize="16sp"
+        android:paddingEnd="8dp" />
+
+    <TextView
+        android:id="@+id/debt_amount_collected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RM 0.00"
+        android:textSize="16sp"
+        android:paddingEnd="8dp" />
+
+    <ImageButton
+        android:id="@+id/delete_button_collected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/delete_24px"
+        android:contentDescription="Delete" />
+</LinearLayout>
