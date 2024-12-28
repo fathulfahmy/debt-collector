@@ -36,6 +36,7 @@ public class CollectedDebtsAdapter extends RecyclerView.Adapter<CollectedDebtsAd
 
         holder.name.setText(debt.getName());
         holder.amount.setText(String.format("RM %.2f", debt.getAmount()));
+        holder.timestamp.setText(debt.getTimestamp());
 
         holder.deleteButton.setOnClickListener(v -> dbRef.child(debt.getId()).removeValue());
     }
@@ -46,13 +47,14 @@ public class CollectedDebtsAdapter extends RecyclerView.Adapter<CollectedDebtsAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, amount;
+        public TextView name, amount, timestamp;
         public ImageButton deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.debt_name_collected);
             amount = itemView.findViewById(R.id.debt_amount_collected);
+            timestamp = itemView.findViewById(R.id.debt_timestamp_collected);
             deleteButton = itemView.findViewById(R.id.delete_button_collected);
         }
     }

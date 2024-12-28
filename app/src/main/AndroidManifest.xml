@@ -10,18 +10,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DebtCollector"
+        android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
         <activity
             android:name=".CollectedDebtsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".AddDebtActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddDebt"
             android:exported="false"
-            android:theme="@style/Theme.DebtCollector" />
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

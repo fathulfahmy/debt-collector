@@ -18,7 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference dbRef;
     private ArrayList<Debt> ongoingDebts;
     private OngoingDebtsAdapter adapter;
+    private SimpleDateFormat timestampFormat = new SimpleDateFormat("d MMM yyyy, h:mma", Locale.ENGLISH);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +47,20 @@ public class MainActivity extends AppCompatActivity {
 
         dbRef = FirebaseDatabase.getInstance().getReference();
 
-        // Load Total Amount Collected
-        dbRef.child("collectedDebts").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        dbRef.child("collectedDebts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double total = 0.0;
-                for (DataSnapshot snapshot : task.getResult().getChildren()) {
-                    Debt debt = snapshot.getValue(Debt.class);
+                for (DataSnapshot debtSnapshot : snapshot.getChildren()) {
+                    Debt debt = debtSnapshot.getValue(Debt.class);
                     if (debt != null) total += debt.getAmount();
                 }
-                totalAmountCollected.setText("Total Collected: RM " + total);
-            } else {
-                Toast.makeText(MainActivity.this, "Failed to load total collected.", Toast.LENGTH_SHORT).show();
+                totalAmountCollected.setText("RM " + total);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Failed to update total collected.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -61,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         ongoingDebtsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ongoingDebtsRecyclerView.setAdapter(adapter);
 
-        dbRef.child("ongoingDebts").addValueEventListener(new ValueEventListener() {
+        dbRef.child("ongoingDebts").orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ongoingDebts.clear();
@@ -69,14 +78,34 @@ public class MainActivity extends AppCompatActivity {
                     Debt debt = debtSnapshot.getValue(Debt.class);
                     if (debt != null) ongoingDebts.add(debt);
                 }
+
+                // Sorting ongoing debts by timestamp
+                Collections.sort(ongoingDebts, (debt1, debt2) -> {
+                    try {
+                        Date date1 = timestampFormat.parse(debt1.getTimestamp());
+                        Date date2 = timestampFormat.parse(debt2.getTimestamp());
+
+                        if (date1 != null && date2 != null) {
+                            return Long.compare(date2.getTime(), date1.getTime()); // Sort descending
+                        } else {
+                            return 0;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return 0; // If parsing fails, keep the original order
+                    }
+                });
+
+                // Notify the adapter to refresh the list
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainActivity.this, "Failed to load debts.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Failed to load ongoing debts.", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         // Button Listeners
         viewRecordsButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CollectedDebtsActivity.class)));
